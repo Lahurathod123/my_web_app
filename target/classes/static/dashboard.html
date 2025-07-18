@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lahu Rathod – Neon Command Center</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+        :root {
+            --neon-blue: #00f0ff;
+            --neon-purple: #d300ff;
+            --bg-black: #000;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: var(--bg-black);
+            color: var(--neon-blue);
+            font-family: 'Orbitron', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                    0deg,
+                    rgba(255, 255, 255, 0.02) 0,
+                    rgba(255, 255, 255, 0.02) 2px,
+                    transparent 2px,
+                    transparent 6px
+            );
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 2.5em;
+            text-shadow: 0 0 12px var(--neon-blue), 0 0 24px var(--neon-purple);
+            z-index: 1;
+        }
+
+        .profile-pic {
+            margin-bottom: 40px;
+            border: 4px solid var(--neon-purple);
+            border-radius: 50%;
+            padding: 4px;
+            box-shadow: 0 0 20px var(--neon-purple), 0 0 30px var(--neon-blue);
+            overflow: hidden;
+            width: 120px;
+            height: 120px;
+            z-index: 1;
+        }
+
+        .profile-pic img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            width: 100%;
+            max-width: 1000px;
+            z-index: 1;
+        }
+
+        .card {
+            position: relative;
+            background: rgba(0, 0, 0, 0.75);
+            border: 3px solid var(--neon-purple);
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-10px) scale(1.04);
+            box-shadow: 0 0 24px var(--neon-blue), 0 0 48px var(--neon-purple);
+        }
+
+        .card h2 {
+            font-size: 1.2em;
+            margin-bottom: 12px;
+            color: var(--neon-purple);
+        }
+
+        .card p {
+            font-size: 0.9em;
+            margin-bottom: 20px;
+            color: var(--neon-blue);
+        }
+
+        .card button {
+            padding: 14px 24px;
+            font-size: 0.9em;
+            color: var(--bg-black);
+            background: var(--neon-purple);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .card button:hover {
+            background: var(--neon-blue);
+            color: var(--bg-black);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 999;
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.9);
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            position: relative;
+            background: #000;
+            padding: 20px;
+            border: 2px solid var(--neon-purple);
+            border-radius: 10px;
+            width: 90%;
+            max-width: 900px;
+            box-shadow: 0 0 20px var(--neon-blue);
+        }
+
+        .modal-content h2 {
+            color: var(--neon-purple);
+            margin-bottom: 10px;
+        }
+
+        .modal-content embed {
+            width: 100%;
+            height: 600px;
+            border: none;
+            box-shadow: 0 0 12px var(--neon-purple);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 1.5rem;
+            color: var(--neon-blue);
+            cursor: pointer;
+        }
+
+        .close-btn:hover {
+            color: var(--neon-purple);
+        }
+
+        @media (max-width: 600px) {
+            .modal-content embed {
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<h1>Lahu Rathod - Profile Command Center</h1>
+
+<div class="profile-pic">
+    <img src="https://media.licdn.com/dms/image/v2/D4D03AQE-NPNNa6qj9A/profile-displayphoto-shrink_800_800/B4DZdIj1brGgAg-/0/1749269043956?e=1756339200&v=beta&t=ZOjn4xUyE31p7NC_Bq446PczfC62x0YDJZJdys0E-78" alt="Lahu Rathod"/>
+</div>
+
+<div class="grid">
+    <div class="card">
+        <h2>Resumes</h2>
+        <p>3+ Years Exp in Automation Testing</p>
+        <button onclick="openModal('/gamer-documents', 'Resume – Lahu Rathod')">VIEW</button>
+    </div>
+    <div class="card">
+        <h2>LinkedIn</h2>
+        <p>Connect with me professionally</p>
+        <button onclick="window.open('https://www.linkedin.com/in/lahu-rathod-8042a5212/', '_blank')">OPEN</button>
+    </div>
+    <div class="card">
+        <h2>Naukri</h2>
+        <p>View my detailed Profile</p>
+        <button onclick="window.open('https://www.naukri.com/lahu-rathod', '_blank')">OPEN</button>
+    </div>
+    <div class="card">
+        <h2>GitHub</h2>
+        <p>Explore my repositories</p>
+        <button onclick="window.open('https://github.com/lahurathod', '_blank')">OPEN</button>
+    </div>
+    <div class="card">
+        <h2>Java SE 11 Cert</h2>
+        <p>Oracle Certified Professional</p>
+        <button onclick="openModal('https://www.example.com/cert/java-se11.pdf', 'Java SE 11 Certificate')">VIEW</button>
+    </div>
+    <div class="card">
+        <h2>Contact Us!</h2>
+        <p>Reach Out Anytime</p>
+        <button onclick="openModal('/contact', 'Interested in my profile? Feel free to contact me anytime! ')">VIEW</button>
+    </div>
+</div>
+
+<!-- Modal for document preview -->
+<div class="modal" id="pdfModal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+        <h2 id="modalTitle">Document</h2>
+        <embed id="modalPdf" src="" type="application/pdf">
+    </div>
+</div>
+
+<script>
+    function openModal(url, title) {
+        document.getElementById('modalPdf').src = url;
+        document.getElementById('modalTitle').textContent = title;
+        document.getElementById('pdfModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('pdfModal').style.display = 'none';
+        document.getElementById('modalPdf').src = '';
+    }
+
+    window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeModal();
+    });
+</script>
+
+</body>
+</html>

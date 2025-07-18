@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload PDF - Lahu Rathod</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: #181a20;
+            color: #fff;
+            font-family: 'Orbitron', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        h2 {
+            color: #00ffe7;
+            text-shadow: 0 0 10px #00ffe7, 0 0 20px #00ffe7;
+            margin-bottom: 30px;
+        }
+
+        form {
+            background: #23272f;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 0 30px #00ffe7;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 90%;
+            max-width: 500px;
+        }
+
+        input[type="file"] {
+            background-color: #1c1e24;
+            border: 2px solid #00ffe7;
+            padding: 10px;
+            color: #00ffe7;
+            font-family: 'Orbitron', Arial, sans-serif;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        button[type="submit"] {
+            background: linear-gradient(90deg, #00ffe7, #007cf0);
+            color: #181a20;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 1em;
+            font-family: 'Orbitron', Arial, sans-serif;
+            cursor: pointer;
+            box-shadow: 0 0 10px #00ffe7;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        button[type="submit"]:hover {
+            background: linear-gradient(90deg, #007cf0, #00ffe7);
+            color: #fff;
+            transform: scale(1.05);
+        }
+
+        .message {
+            color: #ff4c4c;
+            font-size: 1em;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        @media (max-width: 600px) {
+            form {
+                width: 95%;
+                padding: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<h2>Upload PDF File</h2>
+
+<form method="post" enctype="multipart/form-data" action="/upload">
+    <input type="file" name="file" accept="application/pdf" required/>
+    <button type="submit">Upload</button>
+</form>
+
+<!-- Optional: Display error/success message -->
+<p class="message" th:if="${message}" th:text="${message}"></p>
+
+</body>
+</html>
