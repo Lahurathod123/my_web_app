@@ -1,15 +1,75 @@
-services:
-  - type: web
-    name: springboot-llb-webapp
-    env: java
-    buildCommand: ./mvnw clean install
-    startCommand: java -jar target/*.jar
-    envVars:
-      - key: SPRING_DATASOURCE_URL
-        value: jdbc:postgresql://dpg-d267o42li9vc73cuv27g-a.oregon-postgres.render.com/llb_db
-      - key: SPRING_DATASOURCE_USERNAME
-        value: llb_db_user
-      - key: SPRING_DATASOURCE_PASSWORD
-        value: 1fVoyD3yVhYpZYgzjOT2AwiVCD19kpsA
-      - key: SPRING_DATASOURCE_DRIVER_CLASS_NAME
-        value: org.postgresql.Driver
+envVars:
+  - key: SPRING_APPLICATION_NAME
+    value: SpringBootApp
+  - key: SERVER_PORT
+    value: 8000
+
+  # PostgreSQL Database
+  - key: SPRING_DATASOURCE_URL
+    value: jdbc:postgresql://dpg-d267o42li9vc73cuv27g-a.oregon-postgres.render.com/llb_db
+  - key: SPRING_DATASOURCE_USERNAME
+    value: llb_db_user
+  - key: SPRING_DATASOURCE_PASSWORD
+    value: 1fVoyD3yVhYpZYgzjOT2AwiVCD19kpsA
+  - key: SPRING_DATASOURCE_DRIVER_CLASS_NAME
+    value: org.postgresql.Driver
+
+  # HikariCP Pool Settings
+  - key: SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE
+    value: 10
+  - key: SPRING_DATASOURCE_HIKARI_MINIMUM_IDLE
+    value: 5
+  - key: SPRING_DATASOURCE_HIKARI_IDLE_TIMEOUT
+    value: 30000
+  - key: SPRING_DATASOURCE_HIKARI_CONNECTION_TIMEOUT
+    value: 20000
+
+  # JPA / Hibernate
+  - key: SPRING_JPA_HIBERNATE_DDL_AUTO
+    value: update
+  - key: SPRING_JPA_SHOW_SQL
+    value: true
+  - key: SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL
+    value: true
+  - key: SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT
+    value: org.hibernate.dialect.PostgreSQLDialect
+  - key: SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_LOB_NON_CONTEXTUAL_CREATION
+    value: true
+
+  # File upload
+  - key: SPRING_SERVLET_MULTIPART_MAX_FILE_SIZE
+    value: 10MB
+  - key: SPRING_SERVLET_MULTIPART_MAX_REQUEST_SIZE
+    value: 10MB
+
+  # Thymeleaf
+  - key: SPRING_THYMELEAF_ENABLED
+    value: true
+  - key: SPRING_THYMELEAF_PREFIX
+    value: classpath:/templates/
+  - key: SPRING_THYMELEAF_SUFFIX
+    value: .html
+  - key: SPRING_THYMELEAF_MODE
+    value: HTML
+  - key: SPRING_THYMELEAF_ENCODING
+    value: UTF-8
+
+  # Error Handling
+  - key: SERVER_ERROR_WHITELABEL_ENABLED
+    value: false
+  - key: SERVER_ERROR_INCLUDE_MESSAGE
+    value: always
+  - key: SERVER_ERROR_INCLUDE_BINDING_ERRORS
+    value: always
+
+  # Static Resources
+  - key: SPRING_WEB_RESOURCES_STATIC_LOCATIONS
+    value: classpath:/static/
+
+  # Logging
+  - key: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_WEB
+    value: DEBUG
+  - key: LOGGING_LEVEL_ORG_HIBERNATE_SQL
+    value: DEBUG
+  - key: LOGGING_LEVEL_ORG_HIBERNATE_TYPE_DESCRIPTOR_SQL_BASICBINDER
+    value: TRACE
