@@ -40,12 +40,29 @@ public class CertificateController {
         }
     }
 
-    // Stream certificate PDF by ID
+    // Stream certificate PDF by ID with mobile detection
     @GetMapping("/certificate/view/{id}")
-    public ResponseEntity<byte[]> viewCertificate(@PathVariable Long id) {
+    public ResponseEntity<byte[]> viewCertificate(
+            @PathVariable Long id,
+            @RequestHeader(value = "User-Agent", defaultValue = "") String userAgent) {
+
         Certificate cert = certificateService.getCertificate(id);
+        if (cert == null || cert.getData() == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        // Basic mobile detection
+        boolean isMobile = userAgent.toLowerCase().contains("mobile")
+                || userAgent.toLowerCase().contains("android")
+                || userAgent.toLowerCase().contains("iphone")
+                || userAgent.toLowerCase().contains("ipad");
+
+        String disposition = isMobile
+                ? "attachment; filename=\"" + cert.getName() + "\""
+                : "inline; filename=\"" + cert.getName() + "\"";
+
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=" + cert.getName())
+                .header(HttpHeaders.CONTENT_DISPOSITION, disposition)
                 .contentType(MediaType.APPLICATION_PDF)
                 .body(cert.getData());
     }
