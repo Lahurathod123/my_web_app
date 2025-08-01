@@ -1,7 +1,6 @@
 package com.llb.controller;
 
 import com.llb.model.Certificate;
-import com.llb.model.Document;
 import com.llb.service.CertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -20,24 +19,28 @@ public class CertificateController {
     @Autowired
     private CertificateService certificateService;
 
+    // Show all uploaded certificates
     @GetMapping("/certificate")
     public String viewCertificates(Model model) {
         List<Certificate> certificates = certificateService.getAllCertificates();
         model.addAttribute("certificates", certificates);
-        return "viewCertificates"; // Thymeleaf HTML page: view-certificates.html
+        return "viewCertificates"; // maps to viewCertificates.html
     }
 
+    // Upload a new certificate
     @PostMapping("/upload-certificate")
     public String handleFileUpload(@RequestParam("file") MultipartFile file, Model model) {
         try {
             Certificate saved = certificateService.saveFile(file);
             model.addAttribute("doc", saved);
-            return "view"; // Thymeleaf template
+            return "view"; // you can customize this template
         } catch (Exception e) {
             model.addAttribute("message", "Failed to upload file: " + e.getMessage());
-            return "upload"; // Or custom error page
+            return "upload"; // or redirect to an error page
         }
     }
+
+    // Stream certificate PDF by ID
     @GetMapping("/certificate/view/{id}")
     public ResponseEntity<byte[]> viewCertificate(@PathVariable Long id) {
         Certificate cert = certificateService.getCertificate(id);
@@ -46,5 +49,4 @@ public class CertificateController {
                 .contentType(MediaType.APPLICATION_PDF)
                 .body(cert.getData());
     }
-
 }

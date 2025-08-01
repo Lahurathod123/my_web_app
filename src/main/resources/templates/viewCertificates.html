@@ -2,145 +2,129 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Lahu Rathod - Certificate Viewer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lahu Rathod - Certificates</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
     <style>
         body {
             background: #181a20;
             color: #fff;
-            font-family: 'Orbitron', Arial, sans-serif;
+            font-family: 'Orbitron', sans-serif;
             margin: 0;
             padding: 0;
         }
 
         h1 {
             text-align: center;
-            margin-top: 30px;
+            margin: 24px;
             color: #00ffe7;
-            text-shadow: 0 0 1px #00ffe7, 0 0 1px #00ffe7;
         }
 
         table {
-            margin: 40px auto;
-            border-collapse: collapse;
-            width: 80%;
+            width: 90%;
+            max-width: 1000px;
+            margin: 0 auto 40px;
             background: #23272f;
             border-radius: 10px;
             overflow: hidden;
-            animation: neonShadow 2s infinite alternate;
-        }
-
-        @keyframes neonShadow {
-            0% {
-                box-shadow: 0 0 10px #00ffe7, 0 0 20px #00ffe7, 0 0 30px #00ffe7;
-            }
-            100% {
-                box-shadow: 0 0 20px #00ffe7, 0 0 40px #00ffe7, 0 0 60px #00ffe7;
-            }
+            border-collapse: collapse;
         }
 
         th, td {
-            padding: 16px 24px;
-            border-bottom: 1px solid #333;
+            padding: 14px 20px;
+            border-bottom: 1px solid #444;
             text-align: left;
         }
 
         th {
+            background: #1c1e24;
             color: #00ffe7;
-            font-size: 1.2em;
-            background-color: #1c1e24;
+            font-size: 1.1em;
         }
 
         tr:hover {
             background: #2a2d35;
-            transition: background 0.2s ease-in-out;
         }
 
         .view-btn {
-            background: linear-gradient(90deg, #00ffe7, #007cf0);
-            color: #181a20;
+            background: #00ffe7;
+            color: #000;
             border: none;
-            padding: 10px 24px;
-            border-radius: 8px;
-            font-size: 1em;
-            font-family: 'Orbitron', Arial, sans-serif;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.9em;
             cursor: pointer;
-            box-shadow: 0 0 10px #00ffe7;
-            transition: background 0.3s, color 0.3s, transform 0.2s;
+            transition: background 0.3s ease;
         }
 
         .view-btn:hover {
-            background: linear-gradient(90deg, #007cf0, #00ffe7);
+            background: #007cf0;
             color: #fff;
-            transform: scale(1.05);
         }
 
         .modal {
             display: none;
             position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
+            top: 0; left: 0;
             width: 100%;
             height: 100%;
-            overflow: auto;
-            background: rgba(24, 26, 32, 0.95);
-            animation: fadeIn 0.3s ease-in-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            background: rgba(0,0,0,0.85);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
         }
 
         .modal-content {
             background: #23272f;
-            margin: 5% auto;
+            width: 95%;
+            max-width: 850px;
             padding: 20px;
-            border-radius: 12px;
-            width: 80%;
-            max-width: 900px;
-            box-shadow: 0 0 30px #00ffe7;
+            border-radius: 10px;
             position: relative;
-        }
-
-        .close {
-            color: #00ffe7;
-            position: absolute;
-            top: 10px;
-            right: 20px;
-            font-size: 2em;
-            font-weight: bold;
-            cursor: pointer;
-            text-shadow: 0 0 10px #00ffe7;
         }
 
         .pdf-viewer {
             width: 100%;
             height: 70vh;
             border: none;
-            background: #181a20;
+        }
+
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            color: #00ffe7;
+            font-size: 24px;
+            cursor: pointer;
         }
 
         @media (max-width: 600px) {
-            table {
-                width: 95%;
+            h1 {
+                font-size: 1.4rem;
+            }
+
+            th, td {
+                font-size: 0.9rem;
+                padding: 10px;
             }
 
             .view-btn {
                 width: 100%;
-                padding: 12px;
-                font-size: 1.1em;
+                margin-top: 6px;
+            }
+
+            .pdf-viewer {
+                height: 60vh;
             }
         }
     </style>
 </head>
 <body>
 
-<h1>Lahu Rathod - Certificate Viewer</h1>
+<h1>Lahu Rathod - Certificates</h1>
 
-<main role="main">
-    <table aria-label="Certificate Table">
+<main>
+    <table>
         <thead>
         <tr>
             <th>File Name</th>
@@ -154,10 +138,7 @@
         <tr th:each="cert : ${certificates}">
             <td th:text="${cert.name}">Certificate.pdf</td>
             <td>
-                <button class="view-btn"
-                        th:attr="data-id=${cert.id},data-name=${cert.name}">
-                    View
-                </button>
+                <button class="view-btn" th:attr="data-id=${cert.id},data-name=${cert.name}">View</button>
             </td>
         </tr>
         </tbody>
@@ -165,10 +146,10 @@
 </main>
 
 <!-- Modal -->
-<div id="pdfModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="pdfTitle">
+<div id="pdfModal" class="modal">
     <div class="modal-content">
-        <span class="close" id="closeModal" aria-label="Close modal">&times;</span>
-        <h2 id="pdfTitle"></h2>
+        <span class="close" id="closeModal">&times;</span>
+        <h2 id="pdfTitle" style="color: #00ffe7;"></h2>
         <embed id="pdfEmbed" class="pdf-viewer" type="application/pdf"/>
     </div>
 </div>
@@ -183,10 +164,12 @@
         btn.addEventListener('click', () => {
             const id = btn.getAttribute('data-id');
             const name = btn.getAttribute('data-name');
-            pdfEmbed.src = `/certificate/view/${id}`;
             pdfTitle.textContent = name;
-            modal.style.display = 'block';
-            closeModal.focus();
+            pdfEmbed.src = ''; // Reset
+            setTimeout(() => {
+                pdfEmbed.src = `/certificate/view/${id}`;
+            }, 50); // small delay for smooth render
+            modal.style.display = 'flex';
         });
     });
 
@@ -195,15 +178,15 @@
         pdfEmbed.src = '';
     });
 
-    window.addEventListener('click', (e) => {
+    window.addEventListener('click', e => {
         if (e.target === modal) {
             modal.style.display = 'none';
             pdfEmbed.src = '';
         }
     });
 
-    window.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal.style.display === 'block') {
+    window.addEventListener('keydown', e => {
+        if (e.key === 'Escape') {
             modal.style.display = 'none';
             pdfEmbed.src = '';
         }

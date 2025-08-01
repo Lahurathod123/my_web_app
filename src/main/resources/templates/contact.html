@@ -88,12 +88,14 @@
 </head>
 <body>
 <div class="card">
+    <!-- Load profile image from /images/profile.png or via backend path -->
     <img th:src="@{/images/profile.png}" alt="Lahu Rathod" />
+
     <div class="contact-info">
         <h2>📞 Get in Touch</h2>
-        <p><strong>Phone:</strong> 9834223079</p>
-        <p><strong>Email:</strong> lahu.rathod.qa@gmail.com</p>
-        <div class="quote">
+        <p><strong>Phone:</strong> <span th:text="${phone}">9834223079</span></p>
+        <p><strong>Email:</strong> <span th:text="${email}">lahu.rathod.qa@gmail.com</span></p>
+        <div class="quote" th:text="${quote}">
             Automation is not just about writing scripts—it's about building confidence in every release.
             Precision, patience, and persistence define a great Automation Tester.
         </div>

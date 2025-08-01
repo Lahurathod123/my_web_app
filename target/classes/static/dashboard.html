@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Lahu Rathod – Neon Command Center</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet" />
     <style>
         :root {
             --neon-blue: #00f0ff;
@@ -29,24 +29,6 @@
             padding: 20px;
         }
 
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: repeating-linear-gradient(
-                    0deg,
-                    rgba(255, 255, 255, 0.02) 0,
-                    rgba(255, 255, 255, 0.02) 2px,
-                    transparent 2px,
-                    transparent 6px
-            );
-            pointer-events: none;
-            z-index: 0;
-        }
-
         h1 {
             margin-bottom: 20px;
             font-size: 2.5em;
@@ -61,10 +43,8 @@
             border-radius: 50%;
             padding: 4px;
             box-shadow: 0 0 20px var(--neon-purple), 0 0 30px var(--neon-blue);
-            overflow: hidden;
             width: 120px;
             height: 120px;
-            z-index: 1;
         }
 
         .profile-pic img {
@@ -76,26 +56,24 @@
 
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
             gap: 20px;
             width: 100%;
             max-width: 1100px;
-            padding: 10px;
-            z-index: 1;
         }
 
         .card {
             background: rgba(0, 0, 0, 0.75);
             border: 3px solid var(--neon-purple);
             border-radius: 10px;
-            padding: 25px 20px;
+            padding: 20px;
             text-align: center;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .card:hover {
-            transform: translateY(-8px) scale(1.03);
-            box-shadow: 0 0 24px var(--neon-blue), 0 0 48px var(--neon-purple);
+            transform: translateY(-6px) scale(1.03);
+            box-shadow: 0 0 20px var(--neon-blue), 0 0 40px var(--neon-purple);
         }
 
         .card h2 {
@@ -111,14 +89,13 @@
         }
 
         .card button {
-            padding: 12px 20px;
+            padding: 10px 20px;
             font-size: 0.9em;
             color: var(--bg-black);
             background: var(--neon-purple);
             border: none;
             border-radius: 6px;
             cursor: pointer;
-            transition: background 0.2s ease;
         }
 
         .card button:hover {
@@ -160,7 +137,6 @@
             width: 100%;
             height: 600px;
             border: none;
-            box-shadow: 0 0 12px var(--neon-purple);
         }
 
         .close-btn {
@@ -177,30 +153,22 @@
         }
 
         @media (max-width: 768px) {
-            body {
-                padding: 20px 10px;
+            h1 {
+                font-size: 2em;
             }
 
             .modal-content embed {
                 height: 400px;
             }
-
-            .card {
-                padding: 20px 15px;
-            }
-
-            h1 {
-                font-size: 2em;
-            }
         }
 
         @media (max-width: 480px) {
-            .modal-content embed {
-                height: 300px;
-            }
-
             .card button {
                 width: 100%;
+            }
+
+            .modal-content embed {
+                height: 300px;
             }
         }
     </style>
@@ -217,12 +185,12 @@
     <div class="card">
         <h2>My Resume</h2>
         <p>3+ Years Exp in Automation Testing</p>
-        <button onclick="openModal('/gamer-documents', 'Resume – Lahu Rathod')">VIEW</button>
+        <button onclick="handleOpen('/gamer-documents', 'Resume – Lahu Rathod')">VIEW</button>
     </div>
     <div class="card">
         <h2>Achievement</h2>
         <p>Professional Milestone Unlocked</p>
-        <button onclick="openModal('/certificate', 'Lahu Rathod - Certificates')">VIEW</button>
+        <button onclick="handleOpen('/certificate', 'Lahu Rathod - Certificates')">VIEW</button>
     </div>
     <div class="card">
         <h2>LinkedIn</h2>
@@ -242,7 +210,7 @@
     <div class="card">
         <h2>Contact Us!</h2>
         <p>Reach Out Anytime</p>
-        <button onclick="openModal('/contact', 'Interested in my profile? Feel free to contact me anytime! ')">VIEW</button>
+        <button onclick="handleOpen('/contact', 'Contact Me')">VIEW</button>
     </div>
 </div>
 
@@ -255,10 +223,18 @@
 </div>
 
 <script>
-    function openModal(url, title) {
-        document.getElementById('modalPdf').src = url;
-        document.getElementById('modalTitle').textContent = title;
-        document.getElementById('pdfModal').style.display = 'flex';
+    function isMobile() {
+        return window.innerWidth < 768;
+    }
+
+    function handleOpen(url, title) {
+        if (isMobile()) {
+            window.open(url, '_blank');
+        } else {
+            document.getElementById('modalPdf').src = url;
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('pdfModal').style.display = 'flex';
+        }
     }
 
     function closeModal() {
