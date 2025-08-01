@@ -17,7 +17,7 @@
             text-align: center;
             margin-top: 30px;
             color: #00ffe7;
-            text-shadow: 0 0 10px #00ffe7, 0 0 20px #00ffe7;
+            text-shadow: 0 0 1px #00ffe7, 0 0 1px #00ffe7;
         }
 
         table {
@@ -25,10 +25,20 @@
             border-collapse: collapse;
             width: 80%;
             background: #23272f;
-            box-shadow: 0 0 20px #00ffe7;
             border-radius: 10px;
             overflow: hidden;
+            animation: neonShadow 2s infinite alternate;
         }
+
+        @keyframes neonShadow {
+            0% {
+                box-shadow: 0 0 10px #00ffe7, 0 0 20px #00ffe7, 0 0 30px #00ffe7;
+            }
+            100% {
+                box-shadow: 0 0 20px #00ffe7, 0 0 40px #00ffe7, 0 0 60px #00ffe7;
+            }
+        }
+
 
         th, td {
             padding: 16px 24px;
