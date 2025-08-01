@@ -47,6 +47,27 @@
             color: #39ff14;
         }
 
+        .resume {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .resume a {
+            color: #00ffe7;
+            background-color: #111;
+            padding: 12px 20px;
+            border: 2px solid #00ffe7;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .resume a:hover {
+            background-color: #00ffe7;
+            color: #000;
+        }
+
         .quote {
             text-align: center;
             margin-top: 40px;
@@ -59,12 +80,21 @@
 <h1>🏆 Certificates</h1>
 
 <div class="cert-container">
-    <div class="cert-card" th:each="cert : ${certificates}">
-        <img th:src="@{${cert.imageUrl}}" th:alt="${cert.title}"/>
-        <div class="cert-title" th:text="${cert.title}"></div>
+    <!-- Static Example: One Certificate -->
+    <div class="cert-card">
+        <img src="/images/26d2cc65-82ef-4e42-973c-30e16dd4072a.png" alt="Achievement Certificate">
+        <div class="cert-title">Java Achievement</div>
     </div>
+    <!-- Add more cards here -->
+</div>
+
+<div class="resume">
+    <h2>📄 My Resume</h2>
+    <a href="/docs/lahu_resume.pdf" target="_blank">View / Download Resume</a>
 </div>
 
 <div class="quote">Certified Excellence</div>
 </body>
 </html>
+
+
