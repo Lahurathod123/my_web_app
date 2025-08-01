@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- ✅ Added -->
     <title>Lahu Rathod - Resume Viewer</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
     <style>
@@ -18,6 +19,7 @@
             margin-top: 30px;
             color: #00ffe7;
             text-shadow: 0 0 1px #00ffe7, 0 0 1px #00ffe7;
+            font-size: 2rem;
         }
 
         table {
@@ -38,7 +40,6 @@
                 box-shadow: 0 0 20px #00ffe7, 0 0 40px #00ffe7, 0 0 60px #00ffe7;
             }
         }
-
 
         th, td {
             padding: 16px 24px;
@@ -99,7 +100,7 @@
             margin: 5% auto;
             padding: 20px;
             border-radius: 12px;
-            width: 80%;
+            width: 90%;
             max-width: 900px;
             box-shadow: 0 0 30px #00ffe7;
             position: relative;
@@ -123,15 +124,33 @@
             background: #181a20;
         }
 
-        @media (max-width: 600px) {
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
             table {
                 width: 95%;
+                font-size: 0.9rem;
+            }
+
+            th, td {
+                padding: 12px 10px;
             }
 
             .view-btn {
                 width: 100%;
                 padding: 12px;
-                font-size: 1.1em;
+                font-size: 1rem;
+            }
+
+            .modal-content {
+                width: 95%;
+                padding: 15px;
+            }
+
+            .pdf-viewer {
+                height: 60vh;
             }
         }
     </style>
@@ -156,7 +175,8 @@
             <td th:text="${doc.name}">Sample.pdf</td>
             <td>
                 <button class="view-btn"
-                        th:attr="data-id=${doc.id},data-name=${doc.name}">
+                        th:attr="data-id=${doc.id},data-name=${doc.name}"
+                        aria-label="View document">
                     View
                 </button>
             </td>
@@ -184,7 +204,7 @@
         btn.addEventListener('click', () => {
             const id = btn.getAttribute('data-id');
             const name = btn.getAttribute('data-name');
-            pdfEmbed.src = `/view/${id}`; // ✅ Correct path for Spring controller
+            pdfEmbed.src = `/view/${id}`;
             pdfTitle.textContent = name;
             modal.style.display = 'block';
             closeModal.focus();
