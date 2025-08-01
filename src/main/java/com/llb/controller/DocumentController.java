@@ -53,15 +53,14 @@ public class DocumentController {
         model.addAttribute("documents", allDocs);
         return "gamer-documents";
     }
-
     @GetMapping("/view/{id}")
     public ResponseEntity<byte[]> viewDocument(@PathVariable Long id) {
-        Document doc = service.getFile(id);
+        Document doc = service.getFile(id); // your service layer
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=" + doc.getName())
                 .contentType(MediaType.APPLICATION_PDF)
                 .body(doc.getData());
     }
+
 
     @GetMapping("/contact")
     public String showContactPage(Model model) {

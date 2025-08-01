@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- ✅ Added -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lahu Rathod - Resume Viewer</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
     <style>
@@ -16,7 +16,7 @@
 
         h1 {
             text-align: center;
-            margin-top: 30px;
+            margin: 30px 0;
             color: #00ffe7;
             text-shadow: 0 0 1px #00ffe7, 0 0 1px #00ffe7;
             font-size: 2rem;
@@ -24,8 +24,8 @@
 
         table {
             margin: 40px auto;
+            width: 85%;
             border-collapse: collapse;
-            width: 80%;
             background: #23272f;
             border-radius: 10px;
             overflow: hidden;
@@ -33,24 +33,20 @@
         }
 
         @keyframes neonShadow {
-            0% {
-                box-shadow: 0 0 10px #00ffe7, 0 0 20px #00ffe7, 0 0 30px #00ffe7;
-            }
-            100% {
-                box-shadow: 0 0 20px #00ffe7, 0 0 40px #00ffe7, 0 0 60px #00ffe7;
-            }
+            0% { box-shadow: 0 0 10px #00ffe7, 0 0 20px #00ffe7; }
+            100% { box-shadow: 0 0 20px #00ffe7, 0 0 40px #00ffe7; }
         }
 
         th, td {
-            padding: 16px 24px;
+            padding: 16px 20px;
             border-bottom: 1px solid #333;
             text-align: left;
         }
 
         th {
-            color: #00ffe7;
-            font-size: 1.2em;
             background-color: #1c1e24;
+            color: #00ffe7;
+            font-size: 1.1em;
         }
 
         tr:hover {
@@ -61,38 +57,28 @@
         .view-btn {
             background: linear-gradient(90deg, #00ffe7, #007cf0);
             color: #181a20;
+            padding: 10px 20px;
             border: none;
-            padding: 10px 24px;
             border-radius: 8px;
-            font-size: 1em;
-            font-family: 'Orbitron', Arial, sans-serif;
             cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s ease;
             box-shadow: 0 0 10px #00ffe7;
-            transition: background 0.3s, color 0.3s, transform 0.2s;
         }
 
         .view-btn:hover {
             background: linear-gradient(90deg, #007cf0, #00ffe7);
             color: #fff;
-            transform: scale(1.05);
         }
 
         .modal {
             display: none;
             position: fixed;
             z-index: 1000;
-            left: 0;
-            top: 0;
+            top: 0; left: 0;
             width: 100%;
             height: 100%;
-            overflow: auto;
             background: rgba(24, 26, 32, 0.95);
-            animation: fadeIn 0.3s ease-in-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
         }
 
         .modal-content {
@@ -112,46 +98,35 @@
             top: 10px;
             right: 20px;
             font-size: 2em;
-            font-weight: bold;
             cursor: pointer;
-            text-shadow: 0 0 10px #00ffe7;
         }
 
         .pdf-viewer {
             width: 100%;
             height: 70vh;
-            border: none;
             background: #181a20;
+            border: none;
+            border-radius: 8px;
+        }
+
+        .fallback-link {
+            margin-top: 15px;
+            text-align: center;
+            display: none;
+        }
+
+        .fallback-link a {
+            color: #00ffe7;
+            text-decoration: underline;
         }
 
         @media (max-width: 768px) {
-            h1 {
-                font-size: 1.5rem;
-            }
-
-            table {
-                width: 95%;
-                font-size: 0.9rem;
-            }
-
-            th, td {
-                padding: 12px 10px;
-            }
-
-            .view-btn {
-                width: 100%;
-                padding: 12px;
-                font-size: 1rem;
-            }
-
-            .modal-content {
-                width: 95%;
-                padding: 15px;
-            }
-
-            .pdf-viewer {
-                height: 60vh;
-            }
+            h1 { font-size: 1.5rem; }
+            table { width: 95%; font-size: 0.9rem; }
+            th, td { padding: 12px 10px; }
+            .view-btn { width: 100%; }
+            .pdf-viewer { height: 60vh; }
+            .modal-content { width: 95%; }
         }
     </style>
 </head>
@@ -159,7 +134,7 @@
 
 <h1>Lahu Rathod - Resume Viewer</h1>
 
-<main role="main">
+<main>
     <table aria-label="Document List Table">
         <thead>
         <tr>
@@ -169,14 +144,14 @@
         </thead>
         <tbody>
         <tr th:if="${#lists.isEmpty(documents)}">
-            <td colspan="2" style="text-align: center; color: #ff4c4c;">No documents uploaded yet.</td>
+            <td colspan="2" style="text-align:center; color:#ff4c4c;">No documents uploaded yet.</td>
         </tr>
         <tr th:each="doc : ${documents}">
-            <td th:text="${doc.name}">Sample.pdf</td>
+            <td th:text="${doc.name}">Resume.pdf</td>
             <td>
                 <button class="view-btn"
-                        th:attr="data-id=${doc.id},data-name=${doc.name}"
-                        aria-label="View document">
+                        th:data-id="${doc.id}"
+                        th:data-name="${doc.name}">
                     View
                 </button>
             </td>
@@ -186,11 +161,14 @@
 </main>
 
 <!-- Modal -->
-<div id="pdfModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="pdfTitle">
+<div id="pdfModal" class="modal" role="dialog" aria-modal="true">
     <div class="modal-content">
         <span class="close" id="closeModal" aria-label="Close modal">&times;</span>
-        <h2 id="pdfTitle"></h2>
-        <embed id="pdfEmbed" class="pdf-viewer" type="application/pdf"/>
+        <h2 id="pdfTitle" style="color:#00ffe7;"></h2>
+        <embed id="pdfEmbed" class="pdf-viewer" type="application/pdf" />
+        <div class="fallback-link" id="fallbackLink">
+            <p>If PDF doesn't load, <a id="openInNewTab" target="_blank">click here to open in a new tab</a>.</p>
+        </div>
     </div>
 </div>
 
@@ -199,13 +177,20 @@
     const closeModal = document.getElementById('closeModal');
     const pdfEmbed = document.getElementById('pdfEmbed');
     const pdfTitle = document.getElementById('pdfTitle');
+    const fallbackLink = document.getElementById('fallbackLink');
+    const openInNewTab = document.getElementById('openInNewTab');
 
     document.querySelectorAll('.view-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             const id = btn.getAttribute('data-id');
             const name = btn.getAttribute('data-name');
-            pdfEmbed.src = `/view/${id}`;
+            const url = `/view/${id}`;
+
+            pdfEmbed.src = url;
             pdfTitle.textContent = name;
+            openInNewTab.href = url;
+            fallbackLink.style.display = 'block';
+
             modal.style.display = 'block';
             closeModal.focus();
         });
@@ -216,14 +201,14 @@
         pdfEmbed.src = '';
     });
 
-    window.addEventListener('click', (e) => {
+    window.addEventListener('click', e => {
         if (e.target === modal) {
             modal.style.display = 'none';
             pdfEmbed.src = '';
         }
     });
 
-    window.addEventListener('keydown', (e) => {
+    window.addEventListener('keydown', e => {
         if (e.key === 'Escape' && modal.style.display === 'block') {
             modal.style.display = 'none';
             pdfEmbed.src = '';
