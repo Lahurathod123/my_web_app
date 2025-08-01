@@ -1,7 +1,9 @@
 package com.llb.controller;
 
 import com.llb.dto.DocumentListDTO;
+import com.llb.model.Certificate;
 import com.llb.model.Document;
+import com.llb.service.CertificateService;
 import com.llb.service.DocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -19,6 +21,12 @@ public class DocumentController {
 
     @Autowired
     private DocumentService service;
+    @Autowired
+    private CertificateService certService;
+    @GetMapping("/upload")
+    public String showUploadForm() {
+        return "upload"; // This should match your Thymeleaf template name: upload.html
+    }
 
     @PostMapping("/upload")
     public String handleFileUpload(@RequestParam("file") MultipartFile file, Model model) {
@@ -59,5 +67,6 @@ public class DocumentController {
     public String showContactPage(Model model) {
         return "contact";
     }
+
 
 }

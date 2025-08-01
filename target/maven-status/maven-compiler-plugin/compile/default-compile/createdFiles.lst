@@ -1,0 +1,12 @@
+com\llb\model\Certificate.class
+com\llb\dto\DocumentListDTO.class
+com\llb\controller\DashboardController.class
+com\llb\controller\DocumentController.class
+com\llb\repository\DocumentRepository.class
+com\llb\service\CertificateService.class
+com\llb\repository\CertificateRepository.class
+com\llb\controller\CertificateController.class
+com\llb\model\Document.class
+com\llb\service\DocumentService.class
+com\llb\controller\CustomErrorController.class
+com\llb\SpringBootAppApplication.class

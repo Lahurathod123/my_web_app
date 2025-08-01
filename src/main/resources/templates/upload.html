@@ -89,6 +89,11 @@
     <button type="submit">Upload</button>
 </form>
 
+<h2>Upload Certificate PDF</h2>
+<form method="post" enctype="multipart/form-data" action="/upload-certificate">
+    <input type="file" name="file" accept="application/pdf" required />
+    <button type="submit">Upload Certificate</button>
+</form>
 <!-- Optional: Display error/success message -->
 <p class="message" th:if="${message}" th:text="${message}"></p>
 
