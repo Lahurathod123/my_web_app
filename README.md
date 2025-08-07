@@ -3,100 +3,121 @@
 ---
 
 ## 1. **Test Objective**
-To validate and automate one comprehensive end-to-end test scenario for the `POST /v1/files` API that ensures MTU (Monthly Transfer Unit) quota enforcement is functioning correctly — including quota calculation, upload behavior, error response, and system logging.
+To validate the behavior of the `POST /v1/files` endpoint under MTU (Message Transfer Unit) quota limitations — particularly the error handling mechanism when the quota is exceeded.
 
 ---
 
 ## 2. **Scope of the Test**
-This test plan covers the scenario where a file is uploaded by a client who has already consumed most of their quota (measured in MTUs) and attempts to upload a file that exceeds the remaining daily and monthly quota limits.
+This test covers a complete end-to-end flow for uploading a file when a client exceeds their allocated **daily** or **monthly** MTU quota. The test ensures the system returns an appropriate error response and avoids processing or storing the file.
 
 ---
 
-## 3. **Test Scenario: Quota Exceeded Upload**
+## 3. **Test Scenario: Quota Exceeded Response Validation**
 
 | Test Case ID | TC_QUOTA_001 |
 |--------------|--------------|
-| **Title** | Upload file exceeding available MTU quota (daily + monthly) |
+| **Title** | Upload file exceeding daily MTU quota |
 | **API Endpoint** | `POST /v1/files` |
-| **Preconditions** | Client is authenticated and has only 10 MTUs remaining from daily and monthly quota |
-| **Input** | Upload a valid file that consumes 15 MTUs with valid auth headers |
+| **Preconditions** | Client is authenticated. Daily quota is already fully consumed. |
+| **Input** | Valid file upload request with appropriate headers |
 | **Expected Status Code** | `429 Too Many Requests` |
 | **Expected Error Code** | `QUOTA_EXCEEDED` |
 | **Expected Message** | "Exceeded the daily usage limit. Further access is blocked until reset time" |
-| **Postconditions** | File is not stored or processed. Quota remains unchanged. |
+| **Postconditions** | File upload is rejected, and no changes occur in usage data. |
 
 ---
 
 ## 4. **Test Steps**
 
-1. **Setup Test Client:**
-   - Configure test client with daily quota: 100 MTUs, monthly quota: 1000 MTUs.
-   - Simulate usage: 90 MTUs for daily and 990 MTUs for monthly quota via DB/admin API.
+1. **Set Up Test Environment:**
+   - Create a test client (e.g., `test-client-quota-full`).
+   - Set quota values:
+     - Daily limit: `300000 MTUs`
+     - Monthly limit: `1000000 MTUs`
+   - Simulate usage:
+     - Set `currentUsage` to `300001` for daily (already exceeded).
 
-2. **Prepare Payload:**
-   - Generate a valid file consuming 15 MTUs (calculated based on size or processing cost).
+2. **Prepare Request:**
+   - Construct a `POST /v1/files` request with required file data.
+   - Include valid Authorization token and headers.
 
-3. **Execute API Call:**
-   - Make `POST /v1/files` with above payload and client token.
+3. **Trigger API Call:**
+   - Execute the POST request.
 
 4. **Validate Response:**
-   - Assert HTTP Status = 429
-   - Assert body contains:
+   - HTTP Status Code = 429
+   - Response body should match:
      ```json
      {
        "error": {
          "code": "QUOTA_EXCEEDED",
-         "message": "Exceeded the daily usage limit. Further access is blocked until reset time"
+         "message": "Exceeded the daily usage limit. Further access is blocked until reset time",
+         "details": {
+           "clientName": "CLC",
+           "quotaType": "daily",
+           "currentUsage": 300001,
+           "limit": 300000,
+           "nextResetTime": "2025-01-16T00:00:00Z"
+         }
        }
      }
      ```
 
-5. **Log Verification (Optional):**
-   - Verify backend log entry includes quota rejection with client ID and attempted MTUs.
+5. **Postconditions:**
+   - Ensure file is not stored or processed.
+   - Quota values remain unchanged.
 
 ---
 
 ## 5. **Automation Design**
 
 - **Language:** Java
-- **Frameworks:** Cucumber + REST-assured
-- **Tags:** `@Quota @ExceedLimit`
+- **Framework:** Cucumber with REST-assured
+- **Tag:** `@QuotaExceeded`
 
-### Sample Feature Snippet
+### Sample Feature File Snippet
 ```gherkin
-Feature: MTU Quota Enforcement on Upload
+Feature: MTU Quota Enforcement
 
-  @Quota @ExceedLimit
-  Scenario: Upload file exceeding remaining quota
-    Given client has only 10 MTUs left in daily and monthly quota
-    When client uploads a file consuming 15 MTUs
+  @QuotaExceeded
+  Scenario: File upload when daily quota is already exceeded
+    Given the client "CLC" has exceeded the daily MTU quota
+    When the client attempts to upload a file
     Then the response status should be 429
-    And the error message should be "QUOTA_EXCEEDED"
+    And the error code should be "QUOTA_EXCEEDED"
+    And the message should state "Exceeded the daily usage limit. Further access is blocked until reset time"
 ```
 
 ---
 
 ## 6. **Test Data**
 
-- **Client ID:** `test-client-overquota`
-- **Auth Token:** Stored securely in properties file or secrets vault
-- **File:** `sample-overquota.pdf` (consumes 15 MTUs)
-- **Quota Usage Simulation:** Apply quota via DB setup script or admin API
+| Parameter        | Value                         |
+|------------------|-------------------------------|
+| Client ID        | CLC                           |
+| Daily Limit      | 300000                        |
+| Current Usage    | 300001                        |
+| Monthly Limit    | 1000000                       |
+| Token            | Stored in secure config       |
+| File             | `example.pdf` (any valid file) |
 
 ---
 
 ## 7. **Execution Flow**
 
-- Executed via `mvn test -Dcucumber.options="@Quota"`
-- Can be triggered from CI/CD (GitHub Actions, Jenkins)
-- Uses mock data for quota simulation
+- Configure usage quota directly in MongoDB or via setup script.
+- Run automation via Maven:
+  ```bash
+  mvn test -Dcucumber.filter.tags=@QuotaExceeded
+  ```
+- Results will be validated via assertions.
 
 ---
 
-## 8. **Reporting & Logs**
+## 8. **Reports and Logs**
 
-- **Reports:** Cucumber HTML and/or Allure
-- **Logs:** Stored under `/logs/quota-post/`
+- **Report Tool:** Allure / Cucumber HTML
+- **Logs:** Stored at `/logs/quota-tests/` for debugging
 
 ---
 
@@ -106,22 +127,21 @@ Feature: MTU Quota Enforcement on Upload
 - REST-assured
 - Cucumber JVM
 - Maven
-- Postman (for manual verification)
-- Test DB access or admin API for quota injection
+- Access to MongoDB or Admin API to configure quota
 
 ---
 
-## 10. **Risks & Assumptions**
+## 10. **Assumptions & Risks**
 
-| Risk | Mitigation |
-|------|------------|
-| Quota not reset between runs | Use isolated clients or reset via admin API |
-| Auth token expiration | Use token provider or refresh mechanism |
-| Quota consumption logic change | Sync with backend team during API change |
+| Assumption | Risk if Broken |
+|------------|----------------|
+| Daily/Monthly quota accurately enforced | False test results or skipped quota rejection |
+| Client token is active | Authentication failure |
+| System returns expected 429 payload format | Assertion mismatch |
 
 ---
 
 ## 11. **Conclusion**
-This single test case demonstrates enforcement of both **daily and monthly MTU quota logic** for a file upload scenario. It is suitable for client demonstration and automation review and includes authentication, quota handling, error validation, logging, and test coverage readiness.
+This test ensures that the `POST /v1/files` API correctly enforces **daily quota** restrictions and returns a structured 429 error response when usage exceeds limits. The scenario is aligned with real quota behavior and is ready for client review and demo.
 
-✅ Ready for stakeholder review and regression suite integration.
+✅ Recommended for inclusion in regression pipeline and API compliance tests.
